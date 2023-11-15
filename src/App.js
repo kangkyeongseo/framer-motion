@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useRef } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -9,54 +10,46 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
+const BiggerBox = styled.div`
+  width: 600px;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 50px;
+  background-color: rgba(255, 255, 255, 0.4);
+`;
+
 const Box = styled(motion.div)`
   width: 200px;
   height: 200px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  background-color: rgba(255, 255, 255, 0.2);
   border-radius: 50px;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
-`;
-
-const Circle = styled(motion.div)`
-  width: 70px;
-  height: 70px;
-  place-self: center;
   background-color: rgba(255, 255, 255, 1);
-  border-radius: 50%;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
 
 const boxVariants = {
-  start: { opacity: 1, scale: 0 },
-  end: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      delayChildren: 0.3,
-      staggerChildren: 0.2,
-    },
-  },
+  hover: { scale: 1.5, rotateZ: 90 },
+  tap: { scale: 1, borderRadius: "100px" },
+  drag: { backgroundColor: "rgb(46, 204, 113)", transition: { duration: 10 } },
 };
-
-const circleVariants = {
-  start: { opacity: 0, y: 20 },
-  end: {
-    opacity: 1,
-    y: 0,
-  },
-};
-
 function App() {
+  const biggerBoxRef = useRef(null);
   return (
     <Wrapper>
-      <Box variants={boxVariants} initial="start" animate="end">
-        <Circle variants={circleVariants} />
-        <Circle variants={circleVariants} />
-        <Circle variants={circleVariants} />
-        <Circle variants={circleVariants} />
-      </Box>
+      <BiggerBox ref={biggerBoxRef}>
+        <Box
+          drag
+          dragSnapToOrigin
+          dragElastic={0}
+          dragConstraints={biggerBoxRef}
+          variants={boxVariants}
+          whileHover="hover"
+          whileTap="tap"
+          whileDrag="drag"
+        />
+      </BiggerBox>
     </Wrapper>
   );
 }
