@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled(motion.div)`
@@ -9,42 +10,35 @@ const Wrapper = styled(motion.div)`
   align-items: center;
 `;
 
-const Svg = styled(motion.svg)`
+const Box = styled(motion.div)`
   width: 300px;
   height: 300px;
+  border-radius: 50px;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.5);
 `;
 
-const svgVariants = {
-  start: { pathLength: 0, opacity: 0 },
-  end: {
-    pathLength: 1,
-    opacity: 1,
-    transition: { default: { duration: 5 }, opacity: { duration: 3 } },
-  },
+const boxVariants = {
+  initial: { opacity: 0, scale: 0, rotateZ: 45 },
+  visible: { opacity: 1, scale: 1, rotateZ: 0 },
+  leaving: { opacity: 0, scale: 0, y: 100 },
 };
 
 function App() {
+  const [isShowing, setIsShowing] = useState(false);
   return (
     <Wrapper>
-      <Svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-6 h-6"
-      >
-        <motion.path
-          variants={svgVariants}
-          initial="start"
-          animate="end"
-          stroke="white"
-          strokeWidth={1}
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.87c1.355 0 2.697.055 4.024.165C17.155 8.51 18 9.473 18 10.608v2.513m-3-4.87v-1.5m-6 1.5v-1.5m12 9.75l-1.5.75a3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0L3 16.5m15-3.38a48.474 48.474 0 00-6-.37c-2.032 0-4.034.125-6 .37m12 0c.39.049.777.102 1.163.16 1.07.16 1.837 1.094 1.837 2.175v5.17c0 .62-.504 1.124-1.125 1.124H4.125A1.125 1.125 0 013 20.625v-5.17c0-1.08.768-2.014 1.837-2.174A47.78 47.78 0 016 13.12M12.265 3.11a.375.375 0 11-.53 0L12 2.845l.265.265zm-3 0a.375.375 0 11-.53 0L9 2.845l.265.265zm6 0a.375.375 0 11-.53 0L15 2.845l.265.265z"
-        />
-      </Svg>
+      <button onClick={() => setIsShowing((pre) => !pre)}>click</button>
+      <AnimatePresence>
+        {isShowing && (
+          <Box
+            variants={boxVariants}
+            initial="initial"
+            animate="visible"
+            exit="leaving"
+          />
+        )}
+      </AnimatePresence>
     </Wrapper>
   );
 }
